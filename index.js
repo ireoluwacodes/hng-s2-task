@@ -8,12 +8,16 @@ const { notFound } = require("./middleware");
 const { errHandler } = require("./middleware");
 const { CreateDb } = require("./dbconfig");
 const { Router } = require("./route");
+const morgan = require("morgan");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors({
-    origin : ["*"]
-}))
+app.use(morgan("dev"));
+app.use(
+  cors({
+    origin: ["*"],
+  })
+);
 
 app.get("/", (req, res) => {
   res.send("Backend Home page");
@@ -39,4 +43,4 @@ const startApp = async () => {
 
 startApp();
 
-module.exports = app
+module.exports = app;
