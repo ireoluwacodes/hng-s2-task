@@ -31,8 +31,9 @@ const Read = expressAsyncHandler(async (req, res) => {
     let user;
     if (mongoose.Types.ObjectId.isValid(id)) {
       user = await User.findById(id);
+    } else {
+      user = await User.findOne({ name: id });
     }
-    user = await User.findOne({ name: id });
     return res.status(200).json({
       status: true,
       user,
@@ -63,16 +64,17 @@ const Update = expressAsyncHandler(async (req, res) => {
           new: true,
         }
       );
+    } else {
+      user = await User.findOneAndUpdate(
+        { name: id },
+        {
+          name,
+        },
+        {
+          new: true,
+        }
+      );
     }
-    user = await User.findOneAndUpdate(
-      { name: id },
-      {
-        name,
-      },
-      {
-        new: true,
-      }
-    );
     return res.status(200).json({
       status: true,
       user,
@@ -92,11 +94,12 @@ const Delete = expressAsyncHandler(async (req, res) => {
     let user;
     if (mongoose.Types.ObjectId.isValid(id)) {
       user = await User.findByIdAndDelete(id);
+    } else {
+      user = await User.findOneAndDelete({ name: id });
     }
-    user = await User.findOneAndDelete({ name: id });
     return res.status(200).json({
       status: true,
-     message : "deleted"
+      message: "deleted",
     });
   } catch (error) {
     throw new Error(error);
